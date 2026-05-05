@@ -14,8 +14,8 @@
 
 #define BTN_PIN_1    32
 #define BTN_PIN_2    33
-#define BTN_PIN_3    25 
-#define BTN_PIN_4    26 
+#define BTN_PIN_3    15 
+#define BTN_PIN_4    16 
 
 #define BRIGHTNESS_MAX 200       // 整體最大亮度 (0-255)，過亮會過熱
 
