@@ -31,7 +31,7 @@ const uint8_t btnPins[NUM_STRIPS] = {BTN_PIN_1, BTN_PIN_2, BTN_PIN_3, BTN_PIN_4}
 
 // 按鈕觸發狀態 (按住才生效: 放開即關閉)
 bool btnActive[NUM_STRIPS]      = {false, false, false, false};
-int  lastBtnReading[NUM_STRIPS] = {HIGH, HIGH, HIGH, HIGH};
+int  lastBtnReading[NUM_STRIPS] = {LOW, LOW, LOW, LOW};
 unsigned long lastDebounceTime[NUM_STRIPS] = {0, 0, 0, 0};
 const unsigned long DEBOUNCE_MS = 25;
 
@@ -67,8 +67,8 @@ void readButtons() {
     }
     if ((millis() - lastDebounceTime[i]) > DEBOUNCE_MS) {
       stableState[i] = reading;
-      // INPUT_PULLUP: LOW = 按住中 = 觸發
-      btnActive[i] = (stableState[i] == LOW);
+      // INPUT_PULLDOWN: HIGH = 按住中 = 觸發
+      btnActive[i] = (stableState[i] == HIGH);
     }
     lastBtnReading[i] = reading;
   }
@@ -79,7 +79,7 @@ void readButtons() {
 // ============================================================
 void modeBreathing() {
   // 呼吸亮度: 約 4 秒一個週期，30~255
-  uint8_t b = beatsin8(15, 30, 255);
+  uint8_t b = beatsin8(15, 15, 220);
   CRGB c = WARM_WHITE;
   c.nscale8(b);
   for (int s = 0; s < NUM_STRIPS; s++) {
@@ -256,9 +256,9 @@ void setup() {
   FastLED.setBrightness(BRIGHTNESS_MAX);
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 4000);   // 限流保護: 5V 4A
 
-  // 按鈕: 一端接腳位、一端接 GND，使用內部上拉
+  // 按鈕: 一端接腳位、一端接 GND，使用外部下拉
   for (int i = 0; i < NUM_STRIPS; i++) {
-    pinMode(btnPins[i], INPUT_PULLUP);
+    pinMode(btnPins[i], INPUT_PULLDOWN);
   }
 
   clearAll();
